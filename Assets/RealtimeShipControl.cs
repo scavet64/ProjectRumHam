@@ -18,6 +18,10 @@ public class RealtimeShipControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            FireCannonballs();
+        }
+
         // Adjust direction of y-rotation
         if (speed != 0) {
             if (Input.GetKey(KeyCode.LeftArrow)) {
@@ -45,9 +49,7 @@ public class RealtimeShipControl : MonoBehaviour {
             rigid.AddForce(movement);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            FireCannonballs();
-        }
+
 	}
 
     private void FireCannonballs() {
