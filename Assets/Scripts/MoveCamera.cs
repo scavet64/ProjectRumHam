@@ -5,7 +5,7 @@ using UnityStandardAssets.Cameras;
 
 public class MoveCamera : MonoBehaviour {
 
-    public float dragSpeed = 2;
+    public float dragSpeed = 100;
     public double CameraResetTime = 2.5;
     private Vector3 dragOrigin;
     private double timeLeft = 0;
@@ -29,7 +29,7 @@ public class MoveCamera : MonoBehaviour {
         autoCam.m_TurnSpeed = 0;
         timeLeft = CameraResetTime;
         Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - dragOrigin);
-        Vector3 move = new Vector3(pos.y * dragSpeed, pos.x * dragSpeed,0);
+        Vector3 move = new Vector3(0, pos.x * dragSpeed,0);
 
         transform.Rotate(move);
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);       //Makes sure our Z rotation is always 0.

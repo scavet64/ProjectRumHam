@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
-    const int MAX_SPEED = 30;
+    const int MAX_SPEED = 50;
     const int SPEED_ADJUST = 10;
     const float MAX_ROTATION_SPEED = 0.15F;
-    const float ROTATION_ADJUST_SPEED = 5F;
+    const float ROTATION_ADJUST_SPEED = 10F;
+    private readonly int[] CannonArray = { 1, 2, 3, 4, 5, 6, 7 };
+    private readonly System.Random rnd = new System.Random();
 
     Rigidbody rigid;
     int speed;
@@ -55,10 +58,16 @@ public class PlayerMovement : MonoBehaviour {
 
     public void FireCannonballs(string side) {
         float timer = Time.time + 2;
-        int i = 1;
-        while (i < 8) {
-            FireCannon(side, i);
-            i++;
+        int[] MyRandomArray = CannonArray.OrderBy(x => rnd.Next()).ToArray();
+
+        IEnumerator coroutine = StaggerRandomLaunchCannons(side, MyRandomArray);
+        StartCoroutine(coroutine);
+    }
+
+    private IEnumerator StaggerRandomLaunchCannons(string side, int[] randomCannonArray) {
+        for (int i = 0; i < randomCannonArray.Length; i++) {
+            FireCannon(side, randomCannonArray[i]);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
