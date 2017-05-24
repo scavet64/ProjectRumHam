@@ -6,8 +6,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
     const int MAX_SPEED = 50;
     const int SPEED_ADJUST = 10;
-    const float MAX_ROTATION_SPEED = 0.15F;
-    const float ROTATION_ADJUST_SPEED = 10F;
+    const float MAX_ROTATION_SPEED = 0.50F;
+    const float ROTATION_ADJUST_SPEED = 0.5F;
     private readonly int[] CannonArray = { 1, 2, 3, 4, 5, 6, 7 };
     private readonly System.Random rnd = new System.Random();
 
@@ -21,18 +21,21 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void FixedUpdate() {
+    void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             FireCannonballs("portside");
         }
 
         // Adjust direction of y-rotation
-        if (speed != 0) {
+        if (speed == speed) {
+            //Debug.Log(rigid.angularVelocity.magnitude);
             if (Input.GetKey(KeyCode.LeftArrow) && rigid.angularVelocity.magnitude < MAX_ROTATION_SPEED) {
                 rigid.AddTorque(transform.up * -ROTATION_ADJUST_SPEED);
+                Debug.Log("Speed left:");
             }
             if (Input.GetKey(KeyCode.RightArrow) && rigid.angularVelocity.magnitude < MAX_ROTATION_SPEED) {
                 rigid.AddTorque(transform.up * ROTATION_ADJUST_SPEED);
+                Debug.Log("Speed right:");
             }
         }
 
@@ -40,17 +43,20 @@ public class PlayerMovement : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.UpArrow)) {
             if (speed < MAX_SPEED) {
                 speed += SPEED_ADJUST;
+                Debug.Log("Speed Adjusted: " + speed);
             }
         }
         if (Input.GetKeyDown(KeyCode.DownArrow)) {
             if (speed > 0) {
                 speed -= SPEED_ADJUST;
+                Debug.Log("Speed Adjusted: " + speed);
             }
         }
 
         Vector3 movement = transform.rotation * new Vector3(0, 0, speed);
         if (rigid.velocity.magnitude < SPEED_ADJUST) {
             rigid.AddForce(movement);
+            //Debug.Log("Speed Adjusted: " + movement);
         }
 
 

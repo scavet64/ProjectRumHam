@@ -18,7 +18,6 @@ public class Ship : MonoBehaviour {
 
     void OnCollisionEnter(Collision col) {
         if (col.gameObject.GetComponent<Cannonball>() != null) {
-            Debug.Log("entered " + gameObject);
             Sink();
         }
     }

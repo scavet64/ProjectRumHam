@@ -8,7 +8,11 @@ public class Cannonball : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         rigid = GetComponent<Rigidbody>();
-        Vector3 movement = transform.rotation * new Vector3(1000, 150, 0);
+
+        float randomXForce = Random.Range(1000, 1500);
+        float randomYForce = Random.Range(100, 200);
+
+        Vector3 movement = transform.rotation * new Vector3(randomXForce, randomYForce, 0);
         rigid.AddForce(movement);
 	}
 	
