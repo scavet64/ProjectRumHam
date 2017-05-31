@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : NetworkBehaviour
+{
     const int MAX_SPEED = 50;
     const int SPEED_ADJUST = 10;
     const float MAX_ROTATION_SPEED = 0.50F;
     const float ROTATION_ADJUST_SPEED = 0.5F;
     private readonly int[] CannonArray = { 1, 2, 3, 4, 5, 6, 7 };
     private readonly System.Random rnd = new System.Random();
+    private bool nolimits = true;
 
     Rigidbody rigid;
     int speed;
@@ -22,43 +25,48 @@ public class PlayerMovement : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            FireCannonballs("portside");
-        }
 
-        // Adjust direction of y-rotation
-        if (speed == speed) {
-            //Debug.Log(rigid.angularVelocity.magnitude);
-            if (Input.GetKey(KeyCode.LeftArrow) && rigid.angularVelocity.magnitude < MAX_ROTATION_SPEED) {
-                rigid.AddTorque(transform.up * -ROTATION_ADJUST_SPEED);
-                Debug.Log("Speed left:");
+        if (isLocalPlayer)
+        {
+            // Adjust direction of y-rotation
+            if (speed >= MAX_ROTATION_SPEED || nolimits)
+            {
+                if (Input.GetKey(KeyCode.LeftArrow) && rigid.angularVelocity.magnitude < MAX_ROTATION_SPEED)
+                {
+                    rigid.AddTorque(transform.up * -ROTATION_ADJUST_SPEED);
+                    Debug.Log("Speed left:");
+                }
+                if (Input.GetKey(KeyCode.RightArrow) && rigid.angularVelocity.magnitude < MAX_ROTATION_SPEED)
+                {
+                    rigid.AddTorque(transform.up * ROTATION_ADJUST_SPEED);
+                    Debug.Log("Speed right:");
+                }
             }
-            if (Input.GetKey(KeyCode.RightArrow) && rigid.angularVelocity.magnitude < MAX_ROTATION_SPEED) {
-                rigid.AddTorque(transform.up * ROTATION_ADJUST_SPEED);
-                Debug.Log("Speed right:");
-            }
-        }
 
-        // Adjust speed
-        if (Input.GetKeyDown(KeyCode.UpArrow)) {
-            if (speed < MAX_SPEED) {
-                speed += SPEED_ADJUST;
-                Debug.Log("Speed Adjusted: " + speed);
+            // Adjust speed
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                if (speed < MAX_SPEED)
+                {
+                    speed += SPEED_ADJUST;
+                    Debug.Log("Speed Adjusted: " + speed);
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                if (speed > 0)
+                {
+                    speed -= SPEED_ADJUST;
+                    Debug.Log("Speed Adjusted: " + speed);
+                }
+            }
+
+            Vector3 movement = transform.rotation * new Vector3(0, 0, speed);
+            if (rigid.velocity.magnitude < SPEED_ADJUST)
+            {
+                rigid.AddForce(movement);
             }
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow)) {
-            if (speed > 0) {
-                speed -= SPEED_ADJUST;
-                Debug.Log("Speed Adjusted: " + speed);
-            }
-        }
-
-        Vector3 movement = transform.rotation * new Vector3(0, 0, speed);
-        if (rigid.velocity.magnitude < SPEED_ADJUST) {
-            rigid.AddForce(movement);
-            //Debug.Log("Speed Adjusted: " + movement);
-        }
-
 
     }
 
